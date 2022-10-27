@@ -11,3 +11,11 @@ spring:
         persistence:
           validation:
             mode: none
+
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: 10705d6ef26f3c39c3be
+            clientSecret: 224410e7f0b1d3bb4ae065fa78d0424ced3b25d0

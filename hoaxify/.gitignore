@@ -41,3 +41,8 @@ out/
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+
+notes.txt
+
+.mvn
+mvnw*

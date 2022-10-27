@@ -4,18 +4,19 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import UserSignupPage from "./pages/UserSignupPage";
 import * as apiCalls from './api/apiCalls'
+import {LoginPage} from "./pages/LoginPage";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 
 const actions = {
-    postSignup: apiCalls.signup
+    postLogin: apiCalls.login
 }
 
 root.render(
     <React.StrictMode>
-        <UserSignupPage actions={actions}/>
+        <LoginPage actions={actions}/>
     </React.StrictMode>
 );
 
