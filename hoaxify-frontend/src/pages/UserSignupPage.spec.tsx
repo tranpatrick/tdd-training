@@ -1,7 +1,7 @@
 import React from "react";
-import {fireEvent, queryByPlaceholderText, render, waitFor} from '@testing-library/react';
+import {fireEvent, queryByPlaceholderText, render, waitFor, waitForElementToBeRemoved} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect'
-import UserSignupPage from "./UserSignupPage";
+import {UserSignupPage} from "./UserSignupPage";
 
 describe('UserSignupPage', () => {
 
@@ -256,7 +256,7 @@ describe('UserSignupPage', () => {
                     },
                 }),
             };
-            const { findByText } = setupForSubmit({ actions });
+            const {findByText} = setupForSubmit({actions});
             fireEvent.click(button);
 
             const errorMessage = await findByText('Cannot be null');
@@ -277,7 +277,7 @@ describe('UserSignupPage', () => {
                     },
                 }),
             };
-            const { findByText } = setupForSubmit({ actions });
+            const {findByText} = setupForSubmit({actions});
             fireEvent.click(button);
 
             const errorMessage = await findByText('Username cannot be null');
@@ -298,13 +298,28 @@ describe('UserSignupPage', () => {
                     },
                 }),
             };
-            const { findByText } = setupForSubmit({ actions });
+            const {findByText} = setupForSubmit({actions});
             fireEvent.click(button);
 
             const errorMessage = await findByText('Cannot be null');
             fireEvent.change(passwordInput, changeEvent('updated-password'));
 
             expect(errorMessage).not.toBeInTheDocument();
+        });
+
+        it('redirects to homePage after successful signup', async () => {
+            const actions = {
+                postSignup: jest.fn().mockResolvedValue({}),
+            };
+            const history = {
+                push: jest.fn(),
+            };
+            const {queryByTestId} = setupForSubmit({actions, history});
+            fireEvent.click(button);
+
+            await waitForElementToBeRemoved(() => queryByTestId('spinner'));
+
+            expect(history.push).toHaveBeenCalledWith('/');
         });
 
     });

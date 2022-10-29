@@ -4,7 +4,7 @@ const Input = (props: any) => {
 
     let inputClassName = 'form-control';
     if (props.hasError !== undefined) {
-        inputClassName += props.hasError === false ? ' is-valid' : ' is-invalid';
+        inputClassName += props.hasError ? ' is-invalid' : ' is-valid';
     }
 
     return (
@@ -16,7 +16,9 @@ const Input = (props: any) => {
                    onChange={props.onChange}
                    className={inputClassName}
             />
-            {props.hasError && (<span className="invalid-feedback">{props.error}</span>)}
+            {props.hasError && (
+                <span className="invalid-feedback">{props.error}</span>
+            )}
         </div>
     )
 }

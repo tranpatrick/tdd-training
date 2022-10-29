@@ -1,40 +1,35 @@
 import React from 'react';
-import {
-    render,
-    fireEvent,
-    waitForElementToBeRemoved,
-} from '@testing-library/react';
+import {fireEvent, render, waitForElementToBeRemoved,} from '@testing-library/react';
 import { LoginPage } from './LoginPage';
-import Input from "../component/Input";
 
 describe('LoginPage', () => {
     describe('Layout', () => {
         it('has header of Login', () => {
-            const { container } = render(<LoginPage />);
+            const {container} = render(<LoginPage/>);
             const header = container.querySelector('h1');
             expect(header).toHaveTextContent('Login');
         });
 
         it('has input for username', () => {
-            const { queryByPlaceholderText } = render(<LoginPage />);
+            const {queryByPlaceholderText} = render(<LoginPage/>);
             const usernameInput = queryByPlaceholderText('Your username');
             expect(usernameInput).toBeInTheDocument();
         });
 
         it('has input for password', () => {
-            const { queryByPlaceholderText } = render(<LoginPage />);
+            const {queryByPlaceholderText} = render(<LoginPage/>);
             const passwordInput = queryByPlaceholderText('Your password');
             expect(passwordInput).toBeInTheDocument();
         });
 
         it('has password type for password input', () => {
-            const { queryByPlaceholderText } = render(<LoginPage />);
+            const {queryByPlaceholderText} = render(<LoginPage/>);
             const passwordInput = queryByPlaceholderText('Your password') as HTMLInputElement;
             expect(passwordInput.type).toBe('password');
         });
 
         it('has login button', () => {
-            const { container } = render(<LoginPage />);
+            const {container} = render(<LoginPage/>);
             const button = container.querySelector('button');
             expect(button).toBeInTheDocument();
         });
@@ -64,7 +59,7 @@ describe('LoginPage', () => {
         const setupForSubmit = (props?: any) => {
             const rendered = render(<LoginPage {...props} />);
 
-            const { container, queryByPlaceholderText } = rendered;
+            const {container, queryByPlaceholderText} = rendered;
 
             usernameInput = queryByPlaceholderText('Your username') as HTMLInputElement;
             fireEvent.change(usernameInput, changeEvent('my-user-name'));
@@ -76,14 +71,14 @@ describe('LoginPage', () => {
         };
 
         it('sets the username value into state', () => {
-            const { queryByPlaceholderText } = setupForSubmit();
+            const {queryByPlaceholderText} = setupForSubmit();
             const usernameInput = queryByPlaceholderText('Your username') as HTMLInputElement;
             fireEvent.change(usernameInput, changeEvent('my-user-name'));
             expect(usernameInput).toHaveValue('my-user-name');
         });
 
         it('sets the password value into state', () => {
-            const { queryByPlaceholderText } = setupForSubmit();
+            const {queryByPlaceholderText} = setupForSubmit();
             const passwordInput = queryByPlaceholderText('Your password') as HTMLInputElement;
             fireEvent.change(passwordInput, changeEvent('P4ssword'));
             expect(passwordInput).toHaveValue('P4ssword');
@@ -93,7 +88,7 @@ describe('LoginPage', () => {
             const actions = {
                 postLogin: jest.fn().mockResolvedValue({}),
             };
-            setupForSubmit({ actions });
+            setupForSubmit({actions});
             fireEvent.click(button);
             expect(actions.postLogin).toHaveBeenCalledTimes(1);
         });
@@ -107,7 +102,7 @@ describe('LoginPage', () => {
             const actions = {
                 postLogin: jest.fn().mockResolvedValue({}),
             };
-            setupForSubmit({ actions });
+            setupForSubmit({actions});
             fireEvent.click(button);
 
             const expectedUserObject = {
@@ -145,7 +140,7 @@ describe('LoginPage', () => {
                     },
                 }),
             };
-            const { findByText } = setupForSubmit({ actions });
+            const {findByText} = setupForSubmit({actions});
             fireEvent.click(button);
 
             const alert = await findByText('Login failed');
@@ -162,7 +157,7 @@ describe('LoginPage', () => {
                     },
                 }),
             };
-            const { findByText } = setupForSubmit({ actions });
+            const {findByText} = setupForSubmit({actions});
             fireEvent.click(button);
 
             const alert = await findByText('Login failed');
@@ -181,7 +176,7 @@ describe('LoginPage', () => {
                     },
                 }),
             };
-            const { findByText } = setupForSubmit({ actions });
+            const {findByText} = setupForSubmit({actions});
             fireEvent.click(button);
 
             const alert = await findByText('Login failed');
@@ -194,7 +189,7 @@ describe('LoginPage', () => {
             const actions = {
                 postLogin: mockAsyncDelayed(),
             };
-            setupForSubmit({ actions });
+            setupForSubmit({actions});
             fireEvent.click(button);
 
             fireEvent.click(button);
@@ -205,7 +200,7 @@ describe('LoginPage', () => {
             const actions = {
                 postLogin: mockAsyncDelayed(),
             };
-            const { queryByTestId } = setupForSubmit({ actions });
+            const {queryByTestId} = setupForSubmit({actions});
             fireEvent.click(button);
 
             const spinner = queryByTestId('spinner-span');
@@ -216,7 +211,7 @@ describe('LoginPage', () => {
             const actions = {
                 postLogin: mockAsyncDelayed(),
             };
-            const { queryByTestId } = setupForSubmit({ actions });
+            const {queryByTestId} = setupForSubmit({actions});
             fireEvent.click(button);
 
             const spinner = queryByTestId('spinner-span');
@@ -230,13 +225,13 @@ describe('LoginPage', () => {
                     return new Promise((resolve, reject) => {
                         setTimeout(() => {
                             reject({
-                                response: { data: {} },
+                                response: {data: {}},
                             });
                         }, 300);
                     });
                 }),
             };
-            const { queryByTestId } = setupForSubmit({ actions });
+            const {queryByTestId} = setupForSubmit({actions});
             fireEvent.click(button);
 
             const spinner = queryByTestId('spinner-span');
@@ -244,21 +239,22 @@ describe('LoginPage', () => {
             expect(spinner).not.toBeInTheDocument();
         });
 
-        // it('redirects to homePage after successful login', async () => {
-        //     const actions = {
-        //         postLogin: jest.fn().mockResolvedValue({}),
-        //     };
-        //     const history = {
-        //         push: jest.fn(),
-        //     };
-        //     const { queryByTestId } = setupForSubmit({ actions, history });
-        //     fireEvent.click(button);
-        //
-        //     await waitForElementToBeRemoved(() => queryByTestId('spinner-span'));
-        //
-        //     expect(history.push).toHaveBeenCalledWith('/');
-        // });
+        it('redirects to homePage after successful login', async () => {
+            const actions = {
+                postLogin: jest.fn().mockResolvedValue({}),
+            };
+            const history = {
+                push: jest.fn(),
+            };
+            const {queryByTestId} = setupForSubmit({actions, history});
+            fireEvent.click(button);
+
+            await waitForElementToBeRemoved(() => queryByTestId('spinner-span'));
+
+            expect(history.push).toHaveBeenCalledWith('/');
+        });
     });
 });
 
-console.error = () => {};
+console.error = () => {
+};

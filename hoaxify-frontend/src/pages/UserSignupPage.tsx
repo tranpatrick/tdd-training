@@ -1,10 +1,13 @@
 import React, {ChangeEvent} from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import Input from "../component/Input";
-
+import {connect} from "react-redux";
+import * as authActions from '../redux/authActions'
 
 interface UserSignupPageProps {
-    actions: any
+    actions: any,
+    history?: any,
+    dispatch?: any
 }
 
 interface SignupErrors {
@@ -52,17 +55,18 @@ export class UserSignupPage extends React.Component<UserSignupPageProps, any> {
 
     onChangePassword = (event: ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
-        const passwordRepeatConfirmed = this.state.passwordRepeat == value
+        const passwordRepeatConfirmed = this.state.passwordRepeat === value
         const errors = {...this.state.errors};
-        errors.repeatPassword = passwordRepeatConfirmed ? '' : 'Does not match to password';
         delete errors.password;
+        errors.repeatPassword = passwordRepeatConfirmed ? '' : 'Does not match to password';
         this.setState({password: value, passwordRepeatConfirmed, errors})
     }
 
     onChangePasswordRepeat = (event: ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
-        const passwordRepeatConfirmed = this.state.password == value
+        const passwordRepeatConfirmed = this.state.password === value
         const errors = {...this.state.errors};
+        delete errors.repeatPassword;
         errors.repeatPassword = passwordRepeatConfirmed ? '' : 'Does not match to password';
         this.setState({passwordRepeat: value, passwordRepeatConfirmed, errors})
     }
@@ -76,7 +80,9 @@ export class UserSignupPage extends React.Component<UserSignupPageProps, any> {
         this.setState({pendingApiCall: true})
         this.props.actions.postSignup(user)
             .then(() => {
-                this.setState({pendingApiCall: false});
+                this.setState({pendingApiCall: false}, () => {
+                    this.props.history.push('/');
+                });
             })
             .catch((apiError: any) => {
                 let errors = {...this.state.errors}
@@ -151,8 +157,20 @@ export class UserSignupPage extends React.Component<UserSignupPageProps, any> {
             postSignup: () => new Promise((resolve, reject) => {
                 resolve({})
             })
+        },
+        history: {
+            push: () => {
+            }
         }
     }
 }
 
-export default UserSignupPage;
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        actions: {
+            postSignup: (user: any) => dispatch(authActions.signupHandler(user))
+        }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(UserSignupPage);

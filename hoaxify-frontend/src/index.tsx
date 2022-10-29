@@ -2,22 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import UserSignupPage from "./pages/UserSignupPage";
-import * as apiCalls from './api/apiCalls'
-import {LoginPage} from "./pages/LoginPage";
+import {HashRouter} from 'react-router-dom';
+import App from "./containers/App";
+import {Provider} from "react-redux";
+import configureStore from "./redux/configureStore";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 
-const actions = {
-    postLogin: apiCalls.login
-}
 
+const store = configureStore();
 root.render(
-    <React.StrictMode>
-        <LoginPage actions={actions}/>
-    </React.StrictMode>
+    <Provider store={store}>
+        <HashRouter>
+            <App/>
+        </HashRouter>
+    </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

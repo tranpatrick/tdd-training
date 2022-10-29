@@ -1,9 +1,13 @@
 import React from 'react';
-import Input from "../component/Input";
-import ButtonWithProgress from "../component/ButtonWithProgress";
+import Input from '../component/Input';
+import ButtonWithProgress from '../component/ButtonWithProgress';
+import {connect} from 'react-redux';
+import * as authActions from '../redux/authActions'
 
 interface LoginPageProps {
     actions: any
+    history?: any
+    dispatch?: any
 }
 
 export class LoginPage extends React.Component<LoginPageProps, any> {
@@ -38,23 +42,26 @@ export class LoginPage extends React.Component<LoginPageProps, any> {
         }
         if (!this.state.pendingApiCall) {
             this.setState({pendingApiCall: true});
-            this.props.actions.postLogin(body)
+            this.props.actions
+                .postLogin(body)
+                .then(() => {
+                    this.setState({pendingApiCall: false}, () => {
+                        this.props.history.push('/');
+                    })
+                })
                 .catch((error: any) => {
                     if (error.response) {
-                        this.setState({apiError: error.response.data.message})
+                        this.setState({
+                            pendingApiCall: false,
+                            apiError: error.response.data.message
+                        })
                     }
                 })
-                .finally(() => {
-                    this.setState({pendingApiCall: false})
-                });
         }
     }
 
     render() {
-        let disableSubmit = false;
-        if (this.state.username === '' || this.state.password === '') {
-            disableSubmit = true;
-        }
+        const disableSubmit = this.state.username === '' || this.state.password === '';
 
         return (
             <div className="container">
@@ -103,7 +110,20 @@ export class LoginPage extends React.Component<LoginPageProps, any> {
             postLogin: () => new Promise((resolve, reject) => {
                 resolve({})
             })
+        },
+        history: {
+            push: () => {}
         }
     }
 
 }
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        actions: {
+            postLogin: (body: any) => dispatch(authActions.loginHandler(body))
+        }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(LoginPage);
