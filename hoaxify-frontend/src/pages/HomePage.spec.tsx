@@ -23,13 +23,15 @@ import * as apiCalls from '../api/apiCalls';
 //     );
 // };
 
-// apiCalls.listUsers = jest.fn().mockResolvedValue({
-//     data: {
-//         content: [],
-//         number: 0,
-//         size: 3
-//     }
-// });
+// jest.spyOn(apiCalls, 'listUsers')
+//     .mockResolvedValue(Promise.resolve({
+//         data: {
+//             content: [],
+//             number: 0,
+//             size: 3,
+//         },
+//     }));
+
 // apiCalls.loadHoaxes = jest.fn().mockResolvedValue({
 //     data: {
 //         content: [],

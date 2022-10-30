@@ -13,4 +13,11 @@ public class TestUtil {
         return user;
     }
 
+    public static User createValidUser(String username) {
+        User user = createValidUser();
+        user.setUsername(username);
+        return user;
+    }
+
+
 }

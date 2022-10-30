@@ -5,6 +5,16 @@ import App from "./App";
 import {Provider} from "react-redux";
 import configureStore from "../redux/configureStore";
 import axios from "axios";
+import * as apiCalls from '../api/apiCalls'
+
+// jest.spyOn(apiCalls, 'listUsers')
+//     .mockResolvedValue(Promise.resolve({
+//         data: {
+//             content: [],
+//             number: 0,
+//             size: 3,
+//         },
+//     }));
 
 beforeEach(() => {
     localStorage.clear();
@@ -113,7 +123,7 @@ describe('App', () => {
     });
 
     it('displays My Profile on TopBar after login success', async () => {
-        const { queryByPlaceholderText, container, findByTestId } = setup('/login');
+        const {queryByPlaceholderText, container, findByTestId} = setup('/login');
         const usernameInput = queryByPlaceholderText('Your username') as HTMLInputElement;
         fireEvent.change(usernameInput, changeEvent('user1'));
         const passwordInput = queryByPlaceholderText('Your password') as HTMLInputElement;
@@ -134,7 +144,7 @@ describe('App', () => {
     });
 
     it('displays My Profile on TopBar after signup success', async () => {
-        const { queryByPlaceholderText, container, findByText } = setup('/signup');
+        const {queryByPlaceholderText, container, findByText} = setup('/signup');
         const displayNameInput = queryByPlaceholderText('Your display name') as HTMLInputElement;
         const usernameInput = queryByPlaceholderText('Your username') as HTMLInputElement;
         const passwordInput = queryByPlaceholderText('Your password') as HTMLInputElement;
@@ -169,7 +179,7 @@ describe('App', () => {
     });
 
     it('saves logged in user data to localStorage after login success', async () => {
-        const { queryByPlaceholderText, container, findByText } = setup('/login');
+        const {queryByPlaceholderText, container, findByText} = setup('/login');
         const usernameInput = queryByPlaceholderText('Your username') as HTMLInputElement;
         fireEvent.change(usernameInput, changeEvent('user1'));
         const passwordInput = queryByPlaceholderText('Your password') as HTMLInputElement;
@@ -200,13 +210,13 @@ describe('App', () => {
 
     it('displays logged in topBar when storage has logged in user data', () => {
         setUserOneLoggedInStorage();
-        const { queryByText } = setup('/');
+        const {queryByText} = setup('/');
         const myProfileLink = queryByText('My Profile');
         expect(myProfileLink).toBeInTheDocument();
     });
 
     it('sets axios authorization with base64 encoded user credentials after login success', async () => {
-        const { queryByPlaceholderText, container, findByText } = setup('/login');
+        const {queryByPlaceholderText, container, findByText} = setup('/login');
         const usernameInput = queryByPlaceholderText('Your username') as HTMLInputElement;
         fireEvent.change(usernameInput, changeEvent('user1'));
         const passwordInput = queryByPlaceholderText('Your password') as HTMLInputElement;
@@ -241,7 +251,7 @@ describe('App', () => {
 
     it('removes axios authorization header when user logout', async () => {
         setUserOneLoggedInStorage();
-        const { queryByText } = setup('/');
+        const {queryByText} = setup('/');
         const logoutLink = queryByText('Logout') as HTMLLinkElement;
         fireEvent.click(logoutLink);
 

@@ -8,7 +8,6 @@ export const loginSuccess = (loginUserData: any) => {
 }
 
 export const loginHandler = (credentials: any) => {
-    console.log('loginHandler')
     return function (dispatch: any) {
         return apiCalls.login(credentials).then(response => {
             dispatch(
