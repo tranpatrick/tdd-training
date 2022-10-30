@@ -55,14 +55,15 @@ describe('apiCalls', () => {
     });
 
 
-    // describe('getUser', () => {
-    //     it('calls /api/v1.0/users/user5 when user5 is provided for getUser', () => {
-    //         const mockGetUser = jest.fn();
-    //         axios.get = mockGetUser;
-    //         apiCalls.getUser('user5');
-    //         expect(mockGetUser).toBeCalledWith('/api/v1.0/users/user5');
-    //     });
-    // });
+    describe('getUser', () => {
+        it('calls /api/v1.0/users/user5 when user5 is provided for getUser', () => {
+            const mockGetUser = jest.fn();
+            axios.get = mockGetUser;
+            apiCalls.getUser('user5');
+            expect(mockGetUser).toBeCalledWith('/api/v1.0/users/user5');
+        });
+    });
+
     // describe('updateUser', () => {
     //     it('calls /api/v1.0/users/5 when 5 is provided for updateUser', () => {
     //         const mockUpdateUser = jest.fn();

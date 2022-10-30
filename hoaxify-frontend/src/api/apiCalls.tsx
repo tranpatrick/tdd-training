@@ -29,3 +29,7 @@ export const listUsers = (param: {page?: number, size?: number} = {page: 0, size
     const path = `/api/v1.0/users?page=${param.page || 0}&size=${param.size || 3}`
     return axios.get(path)
 }
+
+export const getUser = (username: string): any => {
+    return axios.get(`/api/v1.0/users/${username}`)
+}

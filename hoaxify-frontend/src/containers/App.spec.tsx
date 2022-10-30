@@ -1,4 +1,4 @@
-import {fireEvent, queryByText, render} from "@testing-library/react";
+import {fireEvent, queryByText, render, waitFor} from "@testing-library/react";
 import React from "react";
 import {MemoryRouter} from 'react-router-dom';
 import App from "./App";
@@ -15,6 +15,33 @@ import * as apiCalls from '../api/apiCalls'
 //             size: 3,
 //         },
 //     }));
+
+
+const mockSuccessGetUser1 = {
+    data: {
+        id: 1,
+        username: 'user1',
+        displayName: 'display1',
+        image: 'profile1.png',
+    },
+};
+
+const mockSuccessGetUser2 = {
+    data: {
+        id: 2,
+        username: 'user2',
+        displayName: 'display2',
+        image: 'profile2.png',
+    },
+};
+
+const mockFailGetUser = {
+    response: {
+        data: {
+            message: 'User not found',
+        },
+    },
+};
 
 beforeEach(() => {
     localStorage.clear();
@@ -259,37 +286,38 @@ describe('App', () => {
         expect(axiosAuthorization).toBeFalsy();
     });
 
-    // it('updates user page after clicking my profile when another user page was opened', async () => {
-    //     apiCalls.getUser = jest
-    //         .fn()
-    //         .mockResolvedValueOnce(mockSuccessGetUser2)
-    //         .mockResolvedValueOnce(mockSuccessGetUser1);
-    //
-    //     setUserOneLoggedInStorage();
-    //     const { queryByText, findByText } = setup('/user2');
-    //
-    //     await findByText('display2@user2');
-    //
-    //     const myProfileLink = queryByText('My Profile');
-    //     fireEvent.click(myProfileLink);
-    //     const user1Info = await findByText('display1@user1');
-    //     expect(user1Info).toBeInTheDocument();
-    // });
+    it('updates user page after clicking my profile when another user page was opened', async () => {
+        jest.spyOn(apiCalls, 'getUser')
+            .mockResolvedValueOnce(mockSuccessGetUser2)
+            .mockResolvedValueOnce(mockSuccessGetUser1)
+
+        setUserOneLoggedInStorage();
+        const { queryByText } = setup('/user2');
+
+        await waitFor(() => {
+            queryByText('display2@user2');
+            const myProfileLink = queryByText('My Profile') as HTMLLinkElement;
+            fireEvent.click(myProfileLink);
+            const user1Info = queryByText('display1@user1');
+            expect(user1Info).toBeInTheDocument();
+        })
+    });
+
     // it('updates user page after clicking my profile when another non existing user page was opened', async () => {
-    //     apiCalls.getUser = jest
-    //         .fn()
+    //     jest.spyOn(apiCalls, 'getUser')
     //         .mockRejectedValueOnce(mockFailGetUser)
-    //         .mockResolvedValueOnce(mockSuccessGetUser1);
+    //         .mockResolvedValueOnce(mockSuccessGetUser1)
     //
     //     setUserOneLoggedInStorage();
-    //     const { queryByText, findByText } = setup('/user50');
+    //     const { queryByText } = setup('/user50');
     //
-    //     await findByText('User not found');
-    //
-    //     const myProfileLink = queryByText('My Profile');
-    //     fireEvent.click(myProfileLink);
-    //     const user1Info = await findByText('display1@user1');
-    //     expect(user1Info).toBeInTheDocument();
+    //     await waitFor(() => {
+    //         queryByText('User not found');
+    //         const myProfileLink = queryByText('My Profile') as HTMLLinkElement;
+    //         fireEvent.click(myProfileLink);
+    //         const user1Info = queryByText('display1@user1');
+    //         expect(user1Info).toBeInTheDocument();
+    //     })
     // });
 
 });
