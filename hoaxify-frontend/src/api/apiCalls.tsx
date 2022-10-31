@@ -31,5 +31,9 @@ export const listUsers = (param: {page?: number, size?: number} = {page: 0, size
 }
 
 export const getUser = (username: string): any => {
-    return axios.get(`/api/v1.0/users/${username}`)
+    return axios.get(`/api/v1.0/users/${username}`);
+}
+
+export const updateUser = (userId: number, body?: any): any => {
+    return axios.put(`/api/v1.0/users/${userId}`, body);
 }

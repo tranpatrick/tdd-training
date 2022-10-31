@@ -1,9 +1,11 @@
 package com.hoaxify.hoaxify.user.dto;
 
 import com.hoaxify.hoaxify.user.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class UserDto {
 
     private long id;

@@ -1,13 +1,13 @@
 package com.hoaxify.hoaxify.user;
 
 import com.hoaxify.hoaxify.error.NotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.hoaxify.hoaxify.user.dto.UserUpdateDto;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -40,5 +40,15 @@ public class UserService {
             throw new NotFoundException(username + " not found");
         }
         return userInDb;
+    }
+
+    public User update(long id, UserUpdateDto userUpdateDto) {
+        Optional<User> userInDbOptional = userRepository.findById(id);
+        userInDbOptional.orElseThrow(() -> {
+            throw new NotFoundException(id + " not found");
+        });
+        User userInDb = userInDbOptional.get();
+        userInDb.setDisplayName(userUpdateDto.getDisplayName());
+        return userRepository.save(userInDb);
     }
 }
