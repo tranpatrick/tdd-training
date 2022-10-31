@@ -1,6 +1,7 @@
 spring:
-  datasource:
-    generate-unique-name: false
+  profiles:
+    active:
+      - dev
   h2:
     console:
       enabled: true
@@ -24,3 +25,40 @@ spring:
           github:
             clientId: 10705d6ef26f3c39c3be
             clientSecret: 224410e7f0b1d3bb4ae065fa78d0424ced3b25d0
+
+#hoaxify:
+#  uploadpath: uploads-test
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  h2:
+    console:
+      enabled: false
+  datasource:
+    url: jdbc:h2:./hoaxify-prod
+    username: sa
+  jpa:
+    hibernate:
+      ddl-auto: update
+hoaxify:
+  uploadpath: uploads-prod
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:hoaxify-dev
+    username: sa
+hoaxify:
+  uploadpath: uploads-dev
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+hoaxify:
+  uploadpath: uploads-test

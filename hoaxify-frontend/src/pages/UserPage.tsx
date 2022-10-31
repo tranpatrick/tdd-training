@@ -11,13 +11,15 @@ interface UserPageProps {
 interface UserPageState {
     user?: {
         displayName: string,
-        username: string
+        username: string,
+        image: string
     },
     isLoadingUser: boolean,
     inEditMode: boolean,
     pendingUpdateCall: boolean
     userNotFound?: boolean
     originalDisplayName?: string,
+    image?: string
 }
 
 class UserPage extends React.Component<UserPageProps, any> {
@@ -27,7 +29,8 @@ class UserPage extends React.Component<UserPageProps, any> {
         isLoadingUser: false,
         inEditMode: false,
         originalDisplayName: undefined,
-        pendingUpdateCall: false
+        pendingUpdateCall: false,
+        image: undefined
     }
 
     componentDidMount() {
@@ -65,21 +68,37 @@ class UserPage extends React.Component<UserPageProps, any> {
         if (this.state.originalDisplayName !== undefined) {
             user.displayName = this.state.originalDisplayName;
         }
-        this.setState({user, originalDisplayName: undefined, inEditMode: false});
+        this.setState({
+            user,
+            originalDisplayName: undefined,
+            inEditMode: false,
+            image: undefined
+        });
     }
 
     onClickSave = () => {
         const userId = this.props.loggedInUser.id
         const userUpdate = {
-            displayName: this.state.user?.displayName
-        }
+            displayName: this.state.user?.displayName,
+            image: this.state.image && this.state.image.split(',')[1]
+        };
         this.setState({pendingUpdateCall: true});
         apiCalls.updateUser(userId, userUpdate)
             .then((response: any) => {
-                this.setState({inEditMode: false, originalDisplayName: undefined, pendingUpdateCall: false})
+                const user = {
+                    ...this.state.user,
+                    image: response.data.image
+                }
+                this.setState({
+                    inEditMode: false,
+                    originalDisplayName: undefined,
+                    pendingUpdateCall: false,
+                    image: undefined,
+                    user
+                });
             })
             .catch((error: any) => {
-                this.setState({pendingUpdateCall: false})
+                this.setState({pendingUpdateCall: false});
             });
     }
 
@@ -91,6 +110,20 @@ class UserPage extends React.Component<UserPageProps, any> {
         }
         user.displayName = event.target.value;
         this.setState({user, originalDisplayName})
+    }
+
+    onFileSelect = (event: any) => {
+        if (event.target.files.length === 0) {
+            return;
+        }
+        const file = event.target.files[0];
+        let reader = new FileReader();
+        reader.onloadend = () => {
+            this.setState({
+                image: reader.result
+            })
+        }
+        reader.readAsDataURL(file);
     }
 
     render() {
@@ -123,7 +156,9 @@ class UserPage extends React.Component<UserPageProps, any> {
                                                 onClickCancel={this.onClickCancel}
                                                 onClickSave={this.onClickSave}
                                                 onChangeDisplayName={this.onChangeDisplayName}
-                                                pendingUpdateCall={this.state.pendingUpdateCall}/>
+                                                pendingUpdateCall={this.state.pendingUpdateCall}
+                                                loadedImage={this.state.image}
+                                                onFileSelect={this.onFileSelect}/>
             );
         }
 
