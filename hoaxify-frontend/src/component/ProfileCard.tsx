@@ -27,10 +27,16 @@ const ProfileCard = (props: any) => {
                         <div className="mb-2">
                             <Input value={displayName}
                                    label={`Change display name for ${username}`}
-                                   onChange={props.onChangeDisplayName}/>
-                            <input className="form-control-file mt-2"
-                                   type="file"
-                                   onChange={props.onFileChange}/>
+                                   onChange={props.onChangeDisplayName}
+                                   hasError={props.errors.displayName && true}
+                                   error={props.errors.displayName}/>
+                            <div className="mt-2">
+                                <Input
+                                    type="file"
+                                    onChange={props.onFileSelect}
+                                    hasError={props.errors.image && true}
+                                    error={props.errors.image}/>
+                            </div>
                         </div>
                     )
                 }
@@ -64,5 +70,9 @@ const ProfileCard = (props: any) => {
         </div>
     );
 };
+
+ProfileCard.defaultProps = {
+    errors: {}
+}
 
 export default ProfileCard;

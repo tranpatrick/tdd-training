@@ -20,6 +20,7 @@ interface UserPageState {
     userNotFound?: boolean
     originalDisplayName?: string,
     image?: string
+    errors?: any
 }
 
 class UserPage extends React.Component<UserPageProps, any> {
@@ -72,7 +73,8 @@ class UserPage extends React.Component<UserPageProps, any> {
             user,
             originalDisplayName: undefined,
             inEditMode: false,
-            image: undefined
+            image: undefined,
+            errors: {}
         });
     }
 
@@ -98,7 +100,11 @@ class UserPage extends React.Component<UserPageProps, any> {
                 });
             })
             .catch((error: any) => {
-                this.setState({pendingUpdateCall: false});
+                let errors = {};
+                if (error.response.data.validationErrors) {
+                    errors = error.response.data.validationErrors;
+                }
+                this.setState({pendingUpdateCall: false, errors});
             });
     }
 
@@ -109,18 +115,25 @@ class UserPage extends React.Component<UserPageProps, any> {
             originalDisplayName = user.displayName;
         }
         user.displayName = event.target.value;
-        this.setState({user, originalDisplayName})
+        const errors = {...this.state.errors}
+        errors.displayName = undefined
+        this.setState({user, originalDisplayName, errors})
     }
 
     onFileSelect = (event: any) => {
         if (event.target.files.length === 0) {
             return;
         }
+
+        const errors = {...this.state.errors}
+        errors.image = undefined
+
         const file = event.target.files[0];
         let reader = new FileReader();
         reader.onloadend = () => {
             this.setState({
-                image: reader.result
+                image: reader.result,
+                errors
             })
         }
         reader.readAsDataURL(file);
@@ -158,7 +171,8 @@ class UserPage extends React.Component<UserPageProps, any> {
                                                 onChangeDisplayName={this.onChangeDisplayName}
                                                 pendingUpdateCall={this.state.pendingUpdateCall}
                                                 loadedImage={this.state.image}
-                                                onFileSelect={this.onFileSelect}/>
+                                                onFileSelect={this.onFileSelect}
+                                                errors={this.state.errors}/>
             );
         }
 

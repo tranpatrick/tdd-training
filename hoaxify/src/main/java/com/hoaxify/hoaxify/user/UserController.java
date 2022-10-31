@@ -48,7 +48,7 @@ public class UserController {
 
     @PutMapping("/{id:[0-9]+}")
     @PreAuthorize("#id == principal.id")
-    UserDto updateUser(@PathVariable long id, @RequestBody(required = false) UserUpdateDto userUpdateDto) {
+    UserDto updateUser(@PathVariable long id, @RequestBody(required = false) @Valid UserUpdateDto userUpdateDto) {
         User userInDb = userService.update(id, userUpdateDto);
         return new UserDto(userInDb);
     }
