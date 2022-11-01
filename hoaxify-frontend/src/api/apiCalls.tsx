@@ -37,3 +37,7 @@ export const getUser = (username: string): any => {
 export const updateUser = (userId: number, body?: any): any => {
     return axios.put(`/api/v1.0/users/${userId}`, body);
 }
+
+export const postHoax = (hoax?: any): any => {
+    return axios.post('/api/v1.0/hoaxes', hoax)
+}

@@ -53,19 +53,4 @@ public class UserController {
         return new UserDto(userInDb);
     }
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ApiError handleValidationException(MethodArgumentNotValidException exception, HttpServletRequest request) {
-        ApiError apiError = new ApiError(400, "Validation error", request.getServletPath());
-        BindingResult bindingResult = exception.getBindingResult();
-        Map<String, String> validationErrors = new HashMap<>();
-
-        for (FieldError fieldError : bindingResult.getFieldErrors()) {
-            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
-        }
-
-        apiError.setValidationErrors(validationErrors);
-        return apiError;
-    }
-
 }

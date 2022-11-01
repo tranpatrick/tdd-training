@@ -76,15 +76,16 @@ describe('apiCalls', () => {
 
     });
 
-    // describe('postHoax', () => {
-    //     it('calls /api/v1.0/hoaxes', () => {
-    //         const mockPostHoax = jest.fn();
-    //         axios.post = mockPostHoax;
-    //         apiCalls.postHoax();
-    //         const path = mockPostHoax.mock.calls[0][0];
-    //         expect(path).toBe('/api/v1.0/hoaxes');
-    //     });
-    // });
+    describe('postHoax', () => {
+        it('calls /api/v1.0/hoaxes', () => {
+            const mockPostHoax = jest.fn();
+            axios.post = mockPostHoax;
+            apiCalls.postHoax();
+            const path = mockPostHoax.mock.calls[0][0];
+            expect(path).toBe('/api/v1.0/hoaxes');
+        });
+    });
+
     // describe('loadHoaxes', () => {
     //     it('calls /api/v1.0/hoaxes?page=0&size=5&sort=id,desc when no param provided', () => {
     //         const mockGetHoaxes = jest.fn();
