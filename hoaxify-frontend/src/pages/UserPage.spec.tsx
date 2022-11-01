@@ -66,7 +66,7 @@ const match = {
     },
 };
 
-let store;
+let store: any
 
 const setup = (props: any) => {
     store = configureStore(false);
@@ -578,35 +578,36 @@ describe('UserPage', () => {
             expect(errorMessage).not.toBeInTheDocument();
         });
 
-        //     it('updates redux state after updateUser api call success', async () => {
-        //         const { queryByRole, container } = await setupForEdit();
-        //         let displayInput = container.querySelector('input');
-        //         fireEvent.change(displayInput, { target: { value: 'display1-update' } });
-        //         apiCalls.updateUser = jest.fn().mockResolvedValue(mockSuccessUpdateUser);
-        //
-        //         const saveButton = queryByRole('button', { name: 'Save' });
-        //         fireEvent.click(saveButton);
-        //         await waitForElementToBeRemoved(saveButton);
-        //         const storedUserData = store.getState();
-        //         expect(storedUserData.displayName).toBe(
-        //             mockSuccessUpdateUser.data.displayName
-        //         );
-        //         expect(storedUserData.image).toBe(mockSuccessUpdateUser.data.image);
-        //     });
-        //     it('updates localStorage after updateUser api call success', async () => {
-        //         const { queryByRole, container } = await setupForEdit();
-        //         let displayInput = container.querySelector('input');
-        //         fireEvent.change(displayInput, { target: { value: 'display1-update' } });
-        //         apiCalls.updateUser = jest.fn().mockResolvedValue(mockSuccessUpdateUser);
-        //
-        //         const saveButton = queryByRole('button', { name: 'Save' });
-        //         fireEvent.click(saveButton);
-        //         await waitForElementToBeRemoved(saveButton);
-        //         const storedUserData = JSON.parse(localStorage.getItem('hoax-auth'));
-        //         expect(storedUserData.displayName).toBe(
-        //             mockSuccessUpdateUser.data.displayName
-        //         );
-        //         expect(storedUserData.image).toBe(mockSuccessUpdateUser.data.image);
+        it('updates redux state after updateUser api call success', async () => {
+            const {queryByRole, container} = await setupForEdit();
+            let displayInput = container.querySelector('input') as HTMLInputElement;
+            fireEvent.change(displayInput, {target: {value: 'display1-update'}});
+            jest.spyOn(apiCalls, 'updateUser').mockResolvedValue(mockSuccessUpdateUser)
+
+            const saveButton = queryByRole('button', {name: 'Save'}) as HTMLButtonElement;
+            fireEvent.click(saveButton);
+            await waitForElementToBeRemoved(saveButton);
+            const storedUserData = store.getState();
+            expect(storedUserData.displayName).toBe(mockSuccessUpdateUser.data.displayName);
+            expect(storedUserData.image).toBe(mockSuccessUpdateUser.data.image);
+        });
+
+        it('updates localStorage after updateUser api call success', async () => {
+            const {queryByRole, container} = await setupForEdit();
+            let displayInput = container.querySelector('input') as HTMLInputElement;
+            fireEvent.change(displayInput, {target: {value: 'display1-update'}});
+            jest.spyOn(apiCalls, 'updateUser').mockResolvedValue(mockSuccessUpdateUser)
+
+            const saveButton = queryByRole('button', {name: 'Save'}) as HTMLButtonElement;
+            fireEvent.click(saveButton);
+            await waitForElementToBeRemoved(saveButton);
+            const hoaxAuth = localStorage.getItem('hoax-auth')
+            const storedUserData = hoaxAuth ? JSON.parse(hoaxAuth) : {};
+            expect(storedUserData.displayName).toBe(
+                mockSuccessUpdateUser.data.displayName
+            );
+            expect(storedUserData.image).toBe(mockSuccessUpdateUser.data.image);
+        });
     });
 });
 

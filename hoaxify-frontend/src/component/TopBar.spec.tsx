@@ -5,6 +5,7 @@ import TopBar from "./TopBar";
 import {Provider} from "react-redux";
 import {createStore} from "redux";
 import authReducer from "../redux/authReducer";
+import * as authActions from '../redux/authActions'
 
 const loggedInState = {
     id: 1,
@@ -24,8 +25,10 @@ const defaultState = {
     isLoggedIn: false
 }
 
+let store: any
+
 const setup = (state = defaultState) => {
-    const store = createStore(authReducer, state);
+    store = createStore(authReducer, state);
     return render(
         <Provider store={store}>
             <MemoryRouter>
@@ -75,17 +78,18 @@ describe('TopBar', () => {
             expect(profileLink.getAttribute('href')).toBe('/user1');
         });
 
-        //     it('displays the displayName when user logged in', () => {
-        //         const { queryByText } = setup(loggedInState);
-        //         const displayName = queryByText('display1');
-        //         expect(displayName).toBeInTheDocument();
-        //     });
-        //     it('displays users image when user logged in', () => {
-        //         const { container } = setup(loggedInState);
-        //         const images = container.querySelectorAll('img');
-        //         const userImage = images[1];
-        //         expect(userImage.src).toContain('/images/profile/' + loggedInState.image);
-        //     });
+        it('displays the displayName when user logged in', () => {
+            const {queryByText} = setup(loggedInState);
+            const displayName = queryByText('display1');
+            expect(displayName).toBeInTheDocument();
+        });
+
+        it('displays users image when user logged in', () => {
+            const {container} = setup(loggedInState);
+            const images = container.querySelectorAll('img');
+            const userImage = images[1] as HTMLImageElement;
+            expect(userImage.src).toContain('/images/profile/' + loggedInState.image);
+        });
     });
 
     describe('Interactions', () => {
@@ -98,45 +102,51 @@ describe('TopBar', () => {
             expect(loginLink).toBeInTheDocument();
         });
 
-        //     it('adds show class to drop down menu when clicking username', () => {
-        //         const { queryByText, queryByTestId } = setup(loggedInState);
-        //         const displayName = queryByText('display1');
-        //         fireEvent.click(displayName);
-        //         const dropDownMenu = queryByTestId('drop-down-menu');
-        //         expect(dropDownMenu).toHaveClass('show');
-        //     });
-        //     it('removes show class to drop down menu when clicking app log', () => {
-        //         const { queryByText, queryByTestId, container } = setup(loggedInState);
-        //         const displayName = queryByText('display1');
-        //         fireEvent.click(displayName);
+        it('adds show class to drop down menu when clicking username', () => {
+            const {queryByText, queryByTestId} = setup(loggedInState);
+            const displayName = queryByText('display1') as HTMLButtonElement;
+            fireEvent.click(displayName);
+            const dropDownMenu = queryByTestId('drop-down-menu');
+            expect(dropDownMenu).toHaveClass('show');
+        });
+
+        it('removes show class to drop down menu when clicking app log', () => {
+            const {queryByText, queryByTestId, container} = setup(loggedInState);
+            const displayName = queryByText('display1') as HTMLSpanElement;
+            fireEvent.click(displayName);
+
+            const logo = container.querySelector('img') as HTMLImageElement;
+            fireEvent.click(logo);
+
+            const dropDownMenu = queryByTestId('drop-down-menu');
+            expect(dropDownMenu).not.toHaveClass('show');
+        });
+
+        // it('removes show class to drop down menu when clicking logout', () => {
+        //     const {queryByText, queryByTestId} = setup(loggedInState);
+        //     const displayName = queryByText('display1') as HTMLSpanElement;
+        //     fireEvent.click(displayName);
         //
-        //         const logo = container.querySelector('img');
-        //         fireEvent.click(logo);
+        //     fireEvent.click(queryByText('Logout') as HTMLButtonElement);
         //
-        //         const dropDownMenu = queryByTestId('drop-down-menu');
-        //         expect(dropDownMenu).not.toHaveClass('show');
-        //     });
-        //     it('removes show class to drop down menu when clicking logout', () => {
-        //         const { queryByText, queryByTestId } = setup(loggedInState);
-        //         const displayName = queryByText('display1');
-        //         fireEvent.click(displayName);
+        //     store.dispatch(authActions.loginSuccess(loggedInState));
         //
-        //         fireEvent.click(queryByText('Logout'));
-        //
-        //         store.dispatch(authActions.loginSuccess(loggedInState));
-        //
-        //         const dropDownMenu = queryByTestId('drop-down-menu');
-        //         expect(dropDownMenu).not.toHaveClass('show');
-        //     });
-        //     it('removes show class to drop down menu when clicking My Profile', () => {
-        //         const { queryByText, queryByTestId } = setup(loggedInState);
-        //         const displayName = queryByText('display1');
-        //         fireEvent.click(displayName);
-        //
-        //         fireEvent.click(queryByText('My Profile'));
-        //
-        //         const dropDownMenu = queryByTestId('drop-down-menu');
-        //         expect(dropDownMenu).not.toHaveClass('show');
-        //     });
+        //     const dropDownMenu = queryByTestId('drop-down-menu');
+        //     expect(dropDownMenu).not.toHaveClass('show');
+        // });
+
+        it('removes show class to drop down menu when clicking My Profile', () => {
+            const {queryByText, queryByTestId} = setup(loggedInState);
+            const displayName = queryByText('display1') as HTMLSpanElement;
+            fireEvent.click(displayName);
+
+            fireEvent.click(queryByText('My Profile') as HTMLButtonElement);
+
+            const dropDownMenu = queryByTestId('drop-down-menu');
+            expect(dropDownMenu).not.toHaveClass('show');
+        });
     });
 });
+
+console.error = () => {
+};

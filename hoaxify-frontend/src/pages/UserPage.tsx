@@ -6,6 +6,7 @@ import {connect} from "react-redux";
 interface UserPageProps {
     match: any;
     loggedInUser?: any;
+    dispatch?: any;
 }
 
 interface UserPageState {
@@ -97,6 +98,12 @@ class UserPage extends React.Component<UserPageProps, any> {
                     pendingUpdateCall: false,
                     image: undefined,
                     user
+                }, () => {
+                    const action = {
+                        type: 'update-success',
+                        payload: user
+                    }
+                    this.props.dispatch(action);
                 });
             })
             .catch((error: any) => {
