@@ -86,24 +86,26 @@ describe('apiCalls', () => {
         });
     });
 
-    // describe('loadHoaxes', () => {
-    //     it('calls /api/v1.0/hoaxes?page=0&size=5&sort=id,desc when no param provided', () => {
-    //         const mockGetHoaxes = jest.fn();
-    //         axios.get = mockGetHoaxes;
-    //         apiCalls.loadHoaxes();
-    //         expect(mockGetHoaxes).toBeCalledWith(
-    //             '/api/v1.0/hoaxes?page=0&size=5&sort=id,desc'
-    //         );
-    //     });
-    //     it('calls /api/v1.0/users/user1/hoaxes?page=0&size=5&sort=id,desc when user param provided', () => {
-    //         const mockGetHoaxes = jest.fn();
-    //         axios.get = mockGetHoaxes;
-    //         apiCalls.loadHoaxes('user1');
-    //         expect(mockGetHoaxes).toBeCalledWith(
-    //             '/api/v1.0/users/user1/hoaxes?page=0&size=5&sort=id,desc'
-    //         );
-    //     });
-    // });
+    describe('loadHoaxes', () => {
+        it('calls /api/v1.0/hoaxes?page=0&size=5&sort=id,desc when no param provided', () => {
+            const mockGetHoaxes = jest.fn();
+            axios.get = mockGetHoaxes;
+            apiCalls.loadHoaxes();
+            expect(mockGetHoaxes).toBeCalledWith(
+                '/api/v1.0/hoaxes?page=0&size=5&sort=id,desc'
+            );
+        });
+
+        it('calls /api/v1.0/users/user1/hoaxes?page=0&size=5&sort=id,desc when user param provided', () => {
+            const mockGetHoaxes = jest.fn();
+            axios.get = mockGetHoaxes;
+            apiCalls.loadHoaxes('user1');
+            expect(mockGetHoaxes).toBeCalledWith(
+                '/api/v1.0/users/user1/hoaxes?page=0&size=5&sort=id,desc'
+            );
+        });
+    });
+
     // describe('loadOldHoaxes', () => {
     //     it('calls /api/v1.0/hoaxes/5?direction=before&page=0&size=5&sort=id,desc when hoax id param provided', () => {
     //         const mockGetHoaxes = jest.fn();
@@ -122,6 +124,7 @@ describe('apiCalls', () => {
     //         );
     //     });
     // });
+
     // describe('loadNewHoaxes', () => {
     //     it('calls /api/v1.0/hoaxes/5?direction=after&sort=id,desc when hoax id param provided', () => {
     //         const mockGetHoaxes = jest.fn();
@@ -140,6 +143,7 @@ describe('apiCalls', () => {
     //         );
     //     });
     // });
+
     // describe('loadNewHoaxCount', () => {
     //     it('calls /api/v1.0/hoaxes/5?direction=after&count=true when hoax id param provided', () => {
     //         const mockGetHoaxes = jest.fn();
@@ -158,6 +162,7 @@ describe('apiCalls', () => {
     //         );
     //     });
     // });
+
     // describe('postHoaxFile', () => {
     //     it('calls /api/v1.0/hoaxes/upload', () => {
     //         const mockPostHoaxFile = jest.fn();

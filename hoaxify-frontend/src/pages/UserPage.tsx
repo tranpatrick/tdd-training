@@ -2,6 +2,8 @@ import React from "react";
 import * as apiCalls from '../api/apiCalls'
 import ProfileCard from "../component/ProfileCard";
 import {connect} from "react-redux";
+import HoaxFeed from "../component/HoaxFeed";
+import Spinner from "../component/Spinner";
 
 interface UserPageProps {
     match: any;
@@ -151,11 +153,7 @@ class UserPage extends React.Component<UserPageProps, any> {
 
         if (this.state.isLoadingUser) {
             pageContent = (
-                <div className="d-flex">
-                    <div className="spinner-border text-black-50">
-                        <span data-testid="spinner" className="sr-only">Loading...</span>
-                    </div>
-                </div>
+                <Spinner/>
             )
         } else if (this.state.userNotFound) {
             pageContent = (
@@ -183,7 +181,17 @@ class UserPage extends React.Component<UserPageProps, any> {
             );
         }
 
-        return <div data-testid="userpage">{pageContent}</div>
+        return <div data-testid="userpage">
+            <div className="row">
+                <div className="col">
+                    {pageContent}
+                </div>
+                <div className="col">
+                    <HoaxFeed user={this.props.match.params.username}/>
+                </div>
+            </div>
+
+        </div>
     }
 
     static defaultProps = {

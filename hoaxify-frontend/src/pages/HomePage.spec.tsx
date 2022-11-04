@@ -4,6 +4,7 @@ import HomePage from './HomePage';
 import {createStore} from "redux";
 import authReducer from "../redux/authReducer";
 import {Provider} from "react-redux";
+import * as apiCalls from '../api/apiCalls'
 
 const defaultState = {
     id: 1,
@@ -34,13 +35,15 @@ const setup = (state = defaultState) => {
 //         },
 //     }));
 
-// apiCalls.loadHoaxes = jest.fn().mockResolvedValue({
-//     data: {
-//         content: [],
-//         number: 0,
-//         size: 3
-//     }
-// });
+beforeEach(() => {
+    jest.spyOn(apiCalls, 'loadHoaxes').mockResolvedValue({
+        data: {
+            content: [],
+            number: 0,
+            size: 3
+        }
+    });
+});
 
 describe('HomePage', () => {
 
@@ -66,7 +69,7 @@ describe('HomePage', () => {
                 image: '',
                 isLoggedIn: false
             };
-            const { container } = setup(notLoggedInState);
+            const {container} = setup(notLoggedInState);
             const textArea = container.querySelector('textarea');
             expect(textArea).not.toBeInTheDocument();
         });

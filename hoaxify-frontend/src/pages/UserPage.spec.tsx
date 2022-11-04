@@ -15,14 +15,6 @@ import {Provider} from "react-redux";
 import axios from "axios";
 
 
-// apiCalls.loadHoaxes = jest.fn().mockResolvedValue({
-//     data: {
-//         content: [],
-//         number: 0,
-//         size: 3,
-//     },
-// });
-
 const mockSuccessGetUser = {
     data: {
         id: 1,
@@ -80,6 +72,13 @@ const setup = (props: any) => {
 beforeEach(() => {
     localStorage.clear();
     delete axios.defaults.headers.common['Authorization'];
+    jest.spyOn(apiCalls, 'loadHoaxes').mockResolvedValue({
+        data: {
+            content: [],
+            number: 0,
+            size: 3
+        }
+    });
 });
 
 const setUserOneLoggedInStorage = () => {
